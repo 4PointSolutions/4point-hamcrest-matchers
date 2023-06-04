@@ -15,11 +15,15 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+/**
+ * Matchers for testing an AEM HTML5 Form. 
+ * 
+ *
+ */
 public class HtmlFormDocument {
 	private final Document doc;
 
 	private HtmlFormDocument(Document doc) {
-		super();
 		this.doc = doc;
 	}
 
@@ -52,7 +56,6 @@ public class HtmlFormDocument {
 		private final String expectedTitle;
 		
 		private HasTitle(String expectedTitle) {
-			super();
 			this.expectedTitle = expectedTitle;
 		}
 
@@ -75,6 +78,13 @@ public class HtmlFormDocument {
 		}
 	}
 	
+	/**
+	 * Creates a Matcher that validates that an HTML Form's title.  
+	 * 
+	 * @param expectedTitle
+	 *   the expected value for the title
+	 * @return the matcher
+	 */
 	public static TypeSafeDiagnosingMatcher<HtmlFormDocument> hasTitle(String expectedTitle) {
 		return new HasTitle(expectedTitle);
 	}
@@ -84,7 +94,6 @@ public class HtmlFormDocument {
 		private final String expectedFieldLabel;
 		
 		private ContainsFieldLabel(String expectedFieldLabel) {
-			super();
 			this.expectedFieldLabel = expectedFieldLabel;
 		}
 
@@ -96,7 +105,6 @@ public class HtmlFormDocument {
 				mismatchDescription.appendText("field labels were ")
 								   .appendValueList("['", "','", "']", fieldLabels);
 								   ;
-				
 			}
 			return result;
 		}
@@ -109,9 +117,14 @@ public class HtmlFormDocument {
 		}
 	}
 	
+	/**
+	 * Creates a Matcher that validates that an HTML Form has a input field with a specific field label.  
+	 * 
+	 * @param expectedFieldLabel
+	 * 	field label to match on
+	 * @return the matcher
+	 */
 	public static TypeSafeDiagnosingMatcher<HtmlFormDocument> containsFieldLabel(String expectedFieldLabel) {
 		return new ContainsFieldLabel(expectedFieldLabel);
 	}
-	
-	
 }

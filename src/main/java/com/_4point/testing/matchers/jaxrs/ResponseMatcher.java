@@ -110,7 +110,7 @@ public class ResponseMatcher {
 	}
 	
 	/**
-	 * Creates a Matcher that validates that a Response has an entity..  
+	 * Creates a Matcher that validates that a Response has an entity.
 	 * 
 	 * @return the matcher
 	 */
