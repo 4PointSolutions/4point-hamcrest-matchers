@@ -29,7 +29,7 @@
 		<repository>
 			<id>github</id>
 			<name>GitHub 4PointSolutions Apache Maven Packages</name>
-			<url>https://maven.pkg.github.com/4PointSolutions/WatchedFolderUtils</url>
+			<url>https://maven.pkg.github.com/4PointSolutions/4point-hamcrest-matchers</url>
 		</repository>
 	</distributionManagement>
 
