@@ -1,9 +1,18 @@
 package com._4point.testing.matchers.jaxrs;
 
+import static org.hamcrest.MatcherAssert.assertThat; 
+import static org.hamcrest.Matchers.*;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
+
+import com._4point.testing.matchers.aem.Pdf;
+import com._4point.testing.matchers.aem.Pdf.PdfException;
 
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -16,6 +25,9 @@ import jakarta.ws.rs.core.Response.StatusType;
  *	Based on https://www.planetgeek.ch/2012/03/07/create-your-own-matcher/
  */
 public class ResponseMatcher {
+	
+	public static final String APPLICATION_PDF = "application/pdf";
+	public static final MediaType APPLICATION_PDF_TYPE = new MediaType("application", "pdf");
 
 	private static class IsStatus extends TypeSafeDiagnosingMatcher<Response> {
 		
@@ -125,5 +137,43 @@ public class ResponseMatcher {
 	 */
 	public static TypeSafeDiagnosingMatcher<Response> doesNotHaveEntity() {
 		return new HasEntity(false); 
+	}
+	
+	
+	private static byte[] readEntityBytes(Response result) {
+		try {
+			return ((InputStream) result.getEntity()).readAllBytes();
+		} catch (IOException e) {
+			throw new IllegalStateException("Exception while reading response stream.", e);
+		}
+	}
+
+	/**
+	 * Performs a series of checks on the Response object to validate that it is a response containing
+	 * a PDF.
+	 * 
+	 * * it ensures the ContentType header is application/pdf
+	 * * it ensures the Status is OK
+	 * * it ensures there is a body in the response
+	 * * it reads the body into a PDF object which parses the body using a PDF parser.
+	 * 
+	 * @param response
+	 *   the Response object to be validated
+	 * @return
+	 * @throws PdfException 
+	 */
+	public static Pdf expectingPdf(Response response) throws PdfException {
+		assertThat(response, allOf(isStatus(Status.OK), hasMediaType(APPLICATION_PDF_TYPE), hasEntity()));
+		return Pdf.from(readEntityBytes(response));
+	}
+
+	// TODO: Implement this.
+//	public static Pdf expectingHtmlForm(Response response) {
+//		assertThat(response, allOf(isStatus(Status.OK), hasMediaType(MediaType.TEXT_HTML_TYPE), hasEntity()));
+//		
+//	}
+	
+	private static String readEntityToString(Response result) {
+		return new String(readEntityBytes(result), StandardCharsets.UTF_8);
 	}
 }
