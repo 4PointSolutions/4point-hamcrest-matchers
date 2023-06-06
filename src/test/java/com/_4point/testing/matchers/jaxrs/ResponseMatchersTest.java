@@ -18,13 +18,13 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 @ExtendWith(MockitoExtension.class)
-class ResponseMatcherTest {
+class ResponseMatchersTest {
 
 	@Test
 	void testIsStatus_passes(@Mock Response response) {
 		Status expectedStatus = Status.OK;
 		Mockito.when(response.getStatusInfo()).thenReturn(expectedStatus);
-		assertThat(response, ResponseMatcher.isStatus(expectedStatus));
+		assertThat(response, ResponseMatchers.isStatus(expectedStatus));
 	}
 
 	@Test
@@ -32,7 +32,7 @@ class ResponseMatcherTest {
 		Status actualStatus = Status.BAD_REQUEST;
 		Status expectedStatus = Status.OK;
 		Mockito.when(response.getStatusInfo()).thenReturn(actualStatus);
-		AssertionError ex = assertThrows(AssertionError.class, ()->assertThat(response, ResponseMatcher.isStatus(expectedStatus)));
+		AssertionError ex = assertThrows(AssertionError.class, ()->assertThat(response, ResponseMatchers.isStatus(expectedStatus)));
 		String msg = ex.getMessage();
 		assertNotNull(msg);
 		assertThat(msg, allOf(
@@ -46,7 +46,7 @@ class ResponseMatcherTest {
 	void testHasMediaType_passes(@Mock Response response) {
 		MediaType expectedMediaType = MediaType.APPLICATION_ATOM_XML_TYPE;
 		Mockito.when(response.getMediaType()).thenReturn(expectedMediaType);
-		assertThat(response, ResponseMatcher.hasMediaType(expectedMediaType));
+		assertThat(response, ResponseMatchers.hasMediaType(expectedMediaType));
 	}
 
 	@Disabled("Doesn't work because MediaType.toString() delegates to an implentation.")
@@ -55,7 +55,7 @@ class ResponseMatcherTest {
 		MediaType actualMediaType = MediaType.APPLICATION_OCTET_STREAM_TYPE;
 		MediaType expectedMediaType = MediaType.APPLICATION_ATOM_XML_TYPE;
 		Mockito.when(response.getMediaType()).thenReturn(actualMediaType);
-		AssertionError ex = assertThrows(AssertionError.class, ()->assertThat(response, ResponseMatcher.hasMediaType(expectedMediaType)));
+		AssertionError ex = assertThrows(AssertionError.class, ()->assertThat(response, ResponseMatchers.hasMediaType(expectedMediaType)));
 		String msg = ex.getMessage();
 		assertNotNull(msg);
 		assertThat(msg, allOf(
@@ -69,7 +69,7 @@ class ResponseMatcherTest {
 	void testHasEntity_passes(@Mock Response response) {
 		boolean hasEntity = true;
 		Mockito.when(response.hasEntity()).thenReturn(hasEntity);
-		assertThat(response, ResponseMatcher.hasEntity());
+		assertThat(response, ResponseMatchers.hasEntity());
 		
 	}
 
@@ -77,7 +77,7 @@ class ResponseMatcherTest {
 	void testHasEntity_fails(@Mock Response response) {
 		boolean hasEntity = false;
 		Mockito.when(response.hasEntity()).thenReturn(hasEntity);
-		AssertionError ex = assertThrows(AssertionError.class, ()->assertThat(response, ResponseMatcher.hasEntity()));
+		AssertionError ex = assertThrows(AssertionError.class, ()->assertThat(response, ResponseMatchers.hasEntity()));
 		String msg = ex.getMessage();
 		assertNotNull(msg);
 		assertThat(msg, allOf(
@@ -91,7 +91,7 @@ class ResponseMatcherTest {
 	void testDoesNotHaveEntity_passes(@Mock Response response) {
 		boolean hasEntity = false;
 		Mockito.when(response.hasEntity()).thenReturn(hasEntity);
-		assertThat(response, ResponseMatcher.doesNotHaveEntity());
+		assertThat(response, ResponseMatchers.doesNotHaveEntity());
 		
 	}
 
@@ -99,7 +99,7 @@ class ResponseMatcherTest {
 	void testDoesNotHaveEntity_fails(@Mock Response response) {
 		boolean hasEntity = true;
 		Mockito.when(response.hasEntity()).thenReturn(hasEntity);
-		AssertionError ex = assertThrows(AssertionError.class, ()->assertThat(response, ResponseMatcher.doesNotHaveEntity()));
+		AssertionError ex = assertThrows(AssertionError.class, ()->assertThat(response, ResponseMatchers.doesNotHaveEntity()));
 		String msg = ex.getMessage();
 		assertNotNull(msg);
 		assertThat(msg, allOf(

@@ -9,7 +9,7 @@ import org.hamcrest.FeatureMatcher;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 
-public class ExceptionMatcher {
+public class ExceptionMatchers {
 
 	public static Matcher<Exception> exceptionMsgContainsAll(String...expectedStrings) {
 		@SuppressWarnings("unchecked")

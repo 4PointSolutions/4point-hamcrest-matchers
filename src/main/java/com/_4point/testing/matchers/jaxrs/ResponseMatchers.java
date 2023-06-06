@@ -24,7 +24,7 @@ import jakarta.ws.rs.core.Response.StatusType;
  * 
  *	Based on https://www.planetgeek.ch/2012/03/07/create-your-own-matcher/
  */
-public class ResponseMatcher {
+public class ResponseMatchers {
 	
 	public static final String APPLICATION_PDF = "application/pdf";
 	public static final MediaType APPLICATION_PDF_TYPE = new MediaType("application", "pdf");
