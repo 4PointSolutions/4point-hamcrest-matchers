@@ -1,12 +1,10 @@
 package com._4point.testing.matchers.jaxrs;
 
+import static org.hamcrest.MatcherAssert.assertThat; 
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Disabled;
-
-import static org.hamcrest.MatcherAssert.assertThat; 
-import static org.hamcrest.Matchers.*;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;

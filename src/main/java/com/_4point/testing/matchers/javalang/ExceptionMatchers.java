@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.allOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.Arrays;
+import java.util.stream.Stream;
 
 import org.hamcrest.FeatureMatcher;
 import org.hamcrest.Matcher;
@@ -11,9 +12,11 @@ import org.hamcrest.Matchers;
 
 public class ExceptionMatchers {
 
-	public static Matcher<Exception> exceptionMsgContainsAll(String...expectedStrings) {
+	public static Matcher<Exception> exceptionMsgContainsAll(String firstExpectedString, String...expectedStrings) {
 		@SuppressWarnings("unchecked")
-		Matcher<String>[] containsList = Arrays.stream(expectedStrings).map(s->Matchers.containsString(s)).toArray(Matcher[]::new);
+		Matcher<String>[] containsList = Stream.concat( Stream.of(firstExpectedString), Arrays.stream(expectedStrings))
+											   .map(s->Matchers.containsString(s))
+											   .toArray(Matcher[]::new);
 		return new ExceptionMsgContains(allOf(containsList));
 	}
 
@@ -26,7 +29,7 @@ public class ExceptionMatchers {
 		@Override
 		protected String featureValueOf(Exception actual) {
 			String msg = actual.getMessage();
-			assertNotNull(msg, "Exception message should not be null, but was.");
+			assertNotNull(msg, "Exception message was null.");
 			return msg;
 		}
 
