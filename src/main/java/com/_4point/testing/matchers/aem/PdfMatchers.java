@@ -22,6 +22,11 @@ public class PdfMatchers {
 		}
 	}
 	
+	/**
+	 * Creates a Matcher that validates that a PDF is interactive.
+	 * 
+	 * @return the matcher
+	 */
 	public static TypeSafeDiagnosingMatcher<Pdf> isInteractive() {
 		return new IsInteractive();
 	}
@@ -43,6 +48,11 @@ public class PdfMatchers {
 		}
 	}
 	
+	/**
+	 * Creates a Matcher that validates that a PDF is non-interactive.
+	 * 
+	 * @return the matcher
+	 */
 	public static TypeSafeDiagnosingMatcher<Pdf> isNonInteractive() {
 		return new IsNonInteractive();
 	}
@@ -64,6 +74,11 @@ public class PdfMatchers {
 		}
 	}
 	
+	/**
+	 * Creates a Matcher that validates that a PDF is a dynamic PDF.
+	 * 
+	 * @return the matcher
+	 */
 	public static TypeSafeDiagnosingMatcher<Pdf> isDynamic() {
 		return new IsDynamic();
 	}
@@ -85,6 +100,11 @@ public class PdfMatchers {
 		}
 	}
 	
+	/**
+	 * Creates a Matcher that validates that a PDF is a static PDF.
+	 * 
+	 * @return the matcher
+	 */
 	public static TypeSafeDiagnosingMatcher<Pdf> isStatic() {
 		return new IsStatic();
 	}
@@ -106,6 +126,11 @@ public class PdfMatchers {
 		}
 	}
 	
+	/**
+	 * Creates a Matcher that validates that a PDF is a tagged PDF.
+	 * 
+	 * @return the matcher
+	 */
 	public static TypeSafeDiagnosingMatcher<Pdf> isTagged() {
 		return new IsTagged();
 	}
@@ -136,6 +161,14 @@ public class PdfMatchers {
 		}
 	}
 	
+	/**
+	/**
+	 * Creates a Matcher that tests whether a PDF is an XFA PDF.
+	 * 
+	 * @param hasXfa
+	 * 	indicated whether the PDF should or should not contain XFA. 
+	 * @return the matcher
+	 */
 	public static TypeSafeDiagnosingMatcher<Pdf> hasXfa(boolean hasXfa) {
 		return new HasXfa(hasXfa);
 	}
