@@ -1,7 +1,13 @@
 package com._4point.testing.matchers.aem;
 
+import java.util.List;
+
 import org.hamcrest.Description;
+import org.hamcrest.FeatureMatcher;
+import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
+
+import com._4point.testing.matchers.aem.Pdf.PdfException;
 
 public class PdfMatchers {
 
@@ -173,16 +179,63 @@ public class PdfMatchers {
 		return new HasXfa(hasXfa);
 	}
 
+	private static class HasFonts extends FeatureMatcher<Pdf, Iterable<String>> {
+
+		public HasFonts(Matcher<? super Iterable<String>> subMatcher) {
+			super(subMatcher, "font", "font");
+		}
+
+		@Override
+		protected Iterable<String> featureValueOf(Pdf actual) {
+			try {
+				return actual.allFonts();
+			} catch (PdfException e) {
+				throw new IllegalStateException("Error reading fonts from PDF.", e);
+			}
+		}
+	}
+	
+	/**
+	 * Creates a Matcher that tests the list of font names in the PDF.
+	 * 
+	 * @param matcher
+	 * 	matcher that tests the list of fonts in the PDF.
+	 * @return the matcher
+	 */
+	public static TypeSafeDiagnosingMatcher<Pdf> hasFonts(Matcher<Iterable<? super String>> matcher) {
+		return new HasFonts(matcher);
+	}
+
+	private static class HasEmbeddedFonts extends FeatureMatcher<Pdf, Iterable<String>> {
+
+		public HasEmbeddedFonts(Matcher<? super Iterable<String>> subMatcher) {
+			super(subMatcher, "embedded font", "embedded font");
+		}
+
+		@Override
+		protected Iterable<String> featureValueOf(Pdf actual) {
+			try {
+				return actual.embeddedFonts();
+			} catch (PdfException e) {
+				throw new IllegalStateException("Error reading embedded fonts from PDF.", e);
+			}
+		}
+	}
+	
+	/**
+	 * Creates a Matcher that tests the list of names of embedded fonts in the PDF.
+	 * 
+	 * @param matcher
+	 * 	matcher that tests the list of embedded fonts in the PDF.
+	 * @return the matcher
+	 */
+	public static TypeSafeDiagnosingMatcher<Pdf> HasEmbeddedFonts(Matcher<Iterable<? super String>> matcher) {
+		return new HasEmbeddedFonts(matcher);
+	}
+
 	// Not implemented yet
 //	public static TypeSafeDiagnosingMatcher<Pdf> hasRights() {
 //		return null;
 //	}
 //
-//	public static TypeSafeDiagnosingMatcher<Pdf> hasFonts(String fontName, String... fontNames) {
-//		return null;
-//	}
-//
-//	public static TypeSafeDiagnosingMatcher<Pdf> hasEmbeddedFonts(String fontName, String... fontNames) {
-//		return null;
-//	}
 }

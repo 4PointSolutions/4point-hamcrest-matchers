@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.nio.file.Path;
+import java.util.List;
 
 import org.hamcrest.Matcher;
 import org.junit.jupiter.api.Disabled;
@@ -18,8 +19,8 @@ class PdfMatchersTest {
 	private static final Path SAMPLE_FILES_DIR = RESOURCES_DIR.resolve("SampleFiles");
 	
 	private enum TestCase {
-		SampleFormNonInteractive("SampleFormNonInteractive.pdf", false, false, false, false),
-		SampleForm("SampleForm.pdf", true, true, true, true)
+		SampleFormNonInteractive("SampleFormNonInteractive.pdf", false, false, false, false, List.of("MyriadPro-Regular"), List.of()),
+		SampleForm("SampleForm.pdf", true, true, true, true, List.of("MyriadPro-Regular"), List.of("MyriadPro-Regular"))
 		;
 		
 		private final Path filename;
@@ -27,13 +28,17 @@ class PdfMatchersTest {
 		private final boolean isDynamic;
 		private final boolean isTagged;
 		private final boolean hasXfa;
+		private final List<String> fonts;
+		private final List<String> embeddedFonts;
 
-		private TestCase(String filenameStr, boolean isInteractive, boolean isDynamic, boolean isTagged, boolean hasXfa) {
+		private TestCase(String filenameStr, boolean isInteractive, boolean isDynamic, boolean isTagged, boolean hasXfa, List<String> fonts, List<String> embeddedFonts) {
 			this.filename = SAMPLE_FILES_DIR.resolve(filenameStr);
 			this.isInteractive = isInteractive;
 			this.isDynamic = isDynamic;
 			this.isTagged = isTagged;
 			this.hasXfa = hasXfa;
+			this.fonts = fonts;
+			this.embeddedFonts = embeddedFonts;
 		}
 	}
 
@@ -48,8 +53,13 @@ class PdfMatchersTest {
 				()->performTest(pdf, PdfMatchers.isStatic(), allOf(containsString("should be static"), containsString("was dynamic")), !testCase.isDynamic),
 				()->performTest(pdf, PdfMatchers.isTagged(), allOf(containsString("should be tagged"), containsString("was not tagged")), testCase.isTagged),
 				()->testForPass(pdf, PdfMatchers.hasXfa(testCase.hasXfa)),
-				()->testForFail(pdf, PdfMatchers.hasXfa(!testCase.hasXfa), getXfaFailMsgMatcher(testCase.hasXfa))
+				()->testForFail(pdf, PdfMatchers.hasXfa(!testCase.hasXfa), getXfaFailMsgMatcher(testCase.hasXfa)),
+				()->testForPass(pdf, PdfMatchers.hasFonts(equalTo(testCase.fonts))),
+				()->testForFail(pdf, PdfMatchers.hasFonts(hasItem("BadFontName")), containsString("font")),
+				()->testForPass(pdf, PdfMatchers.HasEmbeddedFonts(equalTo(testCase.embeddedFonts))),
+				()->testForFail(pdf, PdfMatchers.HasEmbeddedFonts(hasItem("BadFontName")), containsString("embedded font"))
 				);
+		
 	}
 	
 	void performTest(Pdf pdf, Matcher<Pdf> matcher, Matcher<String> msgMatcher, boolean shouldPass) {
