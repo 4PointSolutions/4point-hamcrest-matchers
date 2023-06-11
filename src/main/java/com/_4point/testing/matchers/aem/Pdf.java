@@ -205,9 +205,8 @@ public class Pdf implements AutoCloseable {
 		private final Set<String> formRights;
 		private final Set<String> formExRights;
 		private final Set<String> efRights;
-		private UsageRights(Set<String> annotsRights, Set<String> formRights, Set<String> formExRights,
-				Set<String> efRights) {
-			super();
+		
+		private UsageRights(Set<String> annotsRights, Set<String> formRights, Set<String> formExRights, Set<String> efRights) {
 			this.annotsRights = annotsRights;
 			this.formRights = formRights;
 			this.formExRights = formExRights;
@@ -226,6 +225,12 @@ public class Pdf implements AutoCloseable {
 			return efRights;
 		}
 		
+		@Override
+		public String toString() {
+			return "UsageRights [annotsRights=" + annotsRights + ", formRights=" + formRights + ", formExRights="
+					+ formExRights + ", efRights=" + efRights + "]";
+		}
+
 		public static class UsageRightsBuilder {
 			private final Set<String> annotsRights = new HashSet<>();
 			private final Set<String> formRights = new HashSet<>();
@@ -233,7 +238,6 @@ public class Pdf implements AutoCloseable {
 			private final Set<String> efRights = new HashSet<>();
 			
 			private UsageRightsBuilder() {
-				super();
 			}
 			public UsageRightsBuilder addAnnotsRight(String right) {
 				annotsRights.add(right);

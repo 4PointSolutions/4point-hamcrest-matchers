@@ -1,6 +1,6 @@
 package com._4point.testing.matchers.aem;
 
-import java.util.List;
+import static org.hamcrest.Matchers.*;
 
 import org.hamcrest.Description;
 import org.hamcrest.FeatureMatcher;
@@ -9,6 +9,10 @@ import org.hamcrest.TypeSafeDiagnosingMatcher;
 
 import com._4point.testing.matchers.aem.Pdf.PdfException;
 
+/**
+ * Matchers to perform tests in PDFs
+ *
+ */
 public class PdfMatchers {
 
 	private static class IsInteractive extends TypeSafeDiagnosingMatcher<Pdf> {
@@ -206,6 +210,30 @@ public class PdfMatchers {
 		return new HasFonts(matcher);
 	}
 
+	/**
+	 * Creates a Matcher that matches a list of names against the list of fonts in the PDF.
+	 * It must be an exact match.
+	 * 
+	 * @param fontNames
+	 * 	the expected list of fonts in the PDF.
+	 * @return the matcher
+	 */
+	public static TypeSafeDiagnosingMatcher<Pdf> hasExactlyTheseFonts(String... fontNames) {
+		return new HasFonts(containsInAnyOrder(fontNames));
+	}
+	
+	/**
+	 * Creates a Matcher that matches a list of names against the list of fonts in the PDF.
+	 * It allows additional fonts to also be present.
+	 * 
+	 * @param fontNames
+	 * 	the expected list of fonts in the PDF.
+	 * @return the matcher
+	 */
+	public static TypeSafeDiagnosingMatcher<Pdf> hasAtLeastTheseFonts(String... fontNames) {
+		return new HasFonts(hasItems(fontNames));
+	}
+	
 	private static class HasEmbeddedFonts extends FeatureMatcher<Pdf, Iterable<String>> {
 
 		public HasEmbeddedFonts(Matcher<? super Iterable<String>> subMatcher) {
@@ -233,6 +261,31 @@ public class PdfMatchers {
 		return new HasEmbeddedFonts(matcher);
 	}
 
+	/**
+	 * Creates a Matcher that matches a list of names against the list of embedded fonts in the PDF.
+	 * It must be an exact match.
+	 * 
+	 * @param fontNames
+	 * 	the expected list of embedded fonts in the PDF.
+	 * @return the matcher
+	 */
+	public static TypeSafeDiagnosingMatcher<Pdf> hasExactlyTheseEmbeddedFonts(String... fontNames) {
+		return new HasEmbeddedFonts(containsInAnyOrder(fontNames));
+	}
+	
+	/**
+	 * Creates a Matcher that matches a list of names against the list of embedded fonts in the PDF.
+	 * It allows additional fonts to also be present.
+	 * 
+	 * @param fontNames
+	 * 	the expected list of embedded fonts in the PDF.
+	 * @return the matcher
+	 */
+	public static TypeSafeDiagnosingMatcher<Pdf> hasAtLeastTheseEmbeddedFonts(String... fontNames) {
+		return new HasEmbeddedFonts(hasItems(fontNames));
+	}
+	
+	
 	// Not implemented yet
 //	public static TypeSafeDiagnosingMatcher<Pdf> hasRights() {
 //		return null;
