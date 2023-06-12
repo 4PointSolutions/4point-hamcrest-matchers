@@ -5,6 +5,10 @@ import java.util.List;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 
+/**
+ * Matchers for testing an AEM HTML5 Form. 
+ *
+ */
 public class HtmlFormMatchers {
 	private static class HasTitle extends TypeSafeDiagnosingMatcher<HtmlForm> {
 

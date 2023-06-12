@@ -10,8 +10,23 @@ import org.hamcrest.FeatureMatcher;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 
+/**
+ * Matchers used for testing `java.lang.Exception`s (and its subclasses).
+ *
+ */
 public class ExceptionMatchers {
 
+	/**
+	 * Matcher that validates that an exception's message contains all the expected strings.
+	 * 
+	 * At least one string must be specified.
+	 * 
+	 * @param firstExpectedString
+	 * 	string that is expected to be in the message
+	 * @param expectedStrings
+	 * 	additional strings that are expected to be in the message
+	 * @return the matcher
+	 */
 	public static Matcher<Exception> exceptionMsgContainsAll(String firstExpectedString, String...expectedStrings) {
 		@SuppressWarnings("unchecked")
 		Matcher<String>[] containsList = Stream.concat( Stream.of(firstExpectedString), Arrays.stream(expectedStrings))

@@ -26,7 +26,13 @@ import jakarta.ws.rs.core.Response.StatusType;
  */
 public class ResponseMatchers {
 	
+	/**
+	 * Content-type string for "application/pdf"
+	 */
 	public static final String APPLICATION_PDF = "application/pdf";
+	/**
+	 * JAX-RS MedisType object for "application/pdf"
+	 */
 	public static final MediaType APPLICATION_PDF_TYPE = new MediaType("application", "pdf");
 
 	private static class IsStatus extends TypeSafeDiagnosingMatcher<Response> {
@@ -150,7 +156,7 @@ public class ResponseMatchers {
 
 	/**
 	 * Performs a series of checks on the Response object to validate that it is a response containing
-	 * a PDF.
+	 * a PDF and then returns a Pdf object for further validation.
 	 * 
 	 * * it ensures the ContentType header is application/pdf
 	 * * it ensures the Status is OK
@@ -159,8 +165,8 @@ public class ResponseMatchers {
 	 * 
 	 * @param response
 	 *   the Response object to be validated
-	 * @return
-	 * @throws PdfException 
+	 * @return the valid Pdf object
+	 * @throws PdfException thrown if there are any I/O or parsing errors when validating the Pdf 
 	 */
 	public static Pdf expectingPdf(Response response) throws PdfException {
 		assertThat(response, allOf(isStatus(Status.OK), hasMediaType(APPLICATION_PDF_TYPE), hasEntity()));

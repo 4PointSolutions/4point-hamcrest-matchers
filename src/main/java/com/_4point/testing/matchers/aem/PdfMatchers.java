@@ -172,7 +172,6 @@ public class PdfMatchers {
 	}
 	
 	/**
-	/**
 	 * Creates a Matcher that tests whether a PDF is an XFA PDF.
 	 * 
 	 * @param hasXfa

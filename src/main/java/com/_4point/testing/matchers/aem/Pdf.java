@@ -25,6 +25,10 @@ import org.apache.pdfbox.pdmodel.PDResources;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
 
+/**
+ * An object representing a PDF that can be queried about its properties.
+ *
+ */
 public class Pdf implements AutoCloseable {
 	private static final String NEEDS_RENDERING_KEY = "NeedsRendering";
 	private static final String PERMISSIONS_KEY = "Perms";
@@ -40,6 +44,11 @@ public class Pdf implements AutoCloseable {
 		this.catalog = doc.getDocumentCatalog();
 	}
 	
+	/**
+	 * Checks whether this Pdf is a dynamic Pdf
+ 	 * 
+	 * @return true if this Pdf is a dynamic Pdf, false if this Pdf is a static Pdf
+	 */
 	public boolean isDynamic() {
 		COSDictionary cosObject = this.catalog.getCOSObject();
 		return cosObject.getBoolean(NEEDS_RENDERING_KEY, false);
@@ -47,26 +56,58 @@ public class Pdf implements AutoCloseable {
 		// return this.catalog.getAcroForm().xfaIsDynamic();
 	}
 	
+	/**
+	 * Checks whether this Pdf is an interactive Pdf
+ 	 * 
+	 * @return true if this Pdf is an interactive Pdf, false if non-interactive
+	 */
 	public boolean isInteractive() {
 		return this.catalog.getAcroForm() != null;
 	}
 	
+	/**
+ 	 * Checks whether this Pdf has an XFA section
+ 	 * 
+	 * @return true if this Pdf is an XFA Pdf, otherwise false
+	 */
 	public boolean hasXfa() {
 		return this.catalog.getAcroForm() != null && this.catalog.getAcroForm().hasXFA();
 	}
 	
+	/**
+ 	 * Checks whether this Pdf has usage rights assigned (via Reader Extensions or Acrobat)
+ 	 * 
+	 * @return true if this Pdf has usage rights assigned.
+	 */
 	public boolean hasRights() {
 		return getUsageRights() != null;
 	}
 	
-	public boolean isTagged() {
+ 	/**
+ 	 * Checks whether this Pdf contains Tags
+ 	 * 
+ 	 * @return true if Pdf contains tags, otherwise false
+ 	 */
+ 	public boolean isTagged() {
 		return this.catalog.getMarkInfo() != null && this.catalog.getMarkInfo().isMarked();
 	}
 	
+	/**
+	 * Returns a list of the fonts use by the Pdf
+	 * 
+	 * @return the fonts
+	 * @throws PdfException thrown if errors occur when parsing the Pdf
+	 */
 	public List<String> allFonts() throws PdfException {
 		return listFonts(f->true);
 	}
 	
+	/**
+	 * Returns a list of the fonts embedded in the Pdf
+	 * 
+	 * @return the embedded fonts
+	 * @throws PdfException thrown if errors occur when parsing the Pdf
+	 */
 	public List<String> embeddedFonts() throws PdfException {
 		return listFonts(PDFont::isEmbedded);
 	}
@@ -112,6 +153,11 @@ public class Pdf implements AutoCloseable {
 		};
 	}
 	
+	/**
+	 * Retrieves the usage rights from the Pdf
+	 *  
+	 * @return the rights
+	 */
 	public UsageRights getUsageRights() {
 		COSDictionary cosObject = this.catalog.getCOSObject();
 		COSDictionary permissionsDictionary = (COSDictionary)cosObject.getDictionaryObject(PERMISSIONS_KEY);
@@ -176,6 +222,14 @@ public class Pdf implements AutoCloseable {
 		return null;
 	}
 	
+	/**
+	 * Static factory that creates a Pdf object from a byte array.
+	 * 
+	 * @param docBytes
+	 * 	bytes containing a complete Pdf document
+	 * @return the Pdf object
+	 * @throws PdfException thrown if there are errors parsing the Pdf bytes
+	 */
 	public static Pdf from(byte[] docBytes) throws PdfException  {
 		 try {
 			return new Pdf(PDDocument.load(docBytes));
@@ -184,6 +238,14 @@ public class Pdf implements AutoCloseable {
 		}
 	}
 	
+	/**
+	 * Static factory that creates a Pdf object from an InputStream.
+	 * 
+	 * @param docStream
+	 * 	Pdf byte stream
+	 * @return the Pdf object
+	 * @throws PdfException thrown if there are errors reading the Pdf byte stream
+	 */
 	public static Pdf from(InputStream docStream) throws PdfException  {
 		 try {
 			return new Pdf(PDDocument.load(docStream));
@@ -192,6 +254,14 @@ public class Pdf implements AutoCloseable {
 		}
 	}
 	
+	/**
+	 * Static factory that creates a Pdf object from a file on the file system.
+	 * 
+	 * @param docPath
+	 * 	location of Pdf file
+	 * @return the Pdf object
+	 * @throws PdfException thrown if there are errors reading the Pdf file
+	 */
 	public static Pdf from(Path docPath) throws PdfException {
 		try {
 			return Pdf.from(Files.newInputStream(docPath));
@@ -200,6 +270,10 @@ public class Pdf implements AutoCloseable {
 		}
 	}
 
+	/**
+	 * Represents Usage Rights (granted to this PDF by Reader Extensions or Acrobat)
+	 *
+	 */
 	public static class UsageRights {
 		private final Set<String> annotsRights;
 		private final Set<String> formRights;
@@ -212,15 +286,35 @@ public class Pdf implements AutoCloseable {
 			this.formExRights = formExRights;
 			this.efRights = efRights;
 		}
+		/**
+		 * Retrieve the annotation rights for this Pdf.
+		 * 
+		 * @return annotation rights
+		 */
 		public Set<String> getAnnotsRights() {
 			return annotsRights;
 		}
+		/**
+		 * Retrieve the form rights for this Pdf.
+		 * 
+		 * @return form rights
+		 */
 		public Set<String> getFormRights() {
 			return formRights;
 		}
+		/**
+		 * Retrieve the extended form rights for this Pdf.
+		 * 
+		 * @return extended form rights
+		 */
 		public Set<String> getFormExRights() {
 			return formExRights;
 		}
+		/**
+		 * Retrieve the ef rights for this Pdf.
+		 * 
+		 * @return ef rights
+		 */
 		public Set<String> getEfRights() {
 			return efRights;
 		}
@@ -231,7 +325,7 @@ public class Pdf implements AutoCloseable {
 					+ formExRights + ", efRights=" + efRights + "]";
 		}
 
-		public static class UsageRightsBuilder {
+		private static class UsageRightsBuilder {
 			private final Set<String> annotsRights = new HashSet<>();
 			private final Set<String> formRights = new HashSet<>();
 			private final Set<String> formExRights = new HashSet<>();
@@ -264,6 +358,10 @@ public class Pdf implements AutoCloseable {
 		}
 	}
 	
+	/**
+	 * Exceptions specific to PDF Processing
+	 *
+	 */
 	@SuppressWarnings("serial")
 	public static class PdfException extends Exception {
 
@@ -284,6 +382,10 @@ public class Pdf implements AutoCloseable {
 		}
 	}
 
+	/**
+	 * Runtime exceptions specific to PDF Processing
+	 *
+	 */
 	@SuppressWarnings("serial")
 	public static class PdfRuntimeException extends RuntimeException {
 
