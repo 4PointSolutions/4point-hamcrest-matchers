@@ -1,2 +1,2 @@
-include: 
-  - javadocs\0.0.1-SNAPSHOT\apidocs\com\_4point
+# Force inclusion of _4point diretcory.
+include: [".htaccess","javadocs/0.0.1-SNAPSHOT/apidocs/com/_4point"]
