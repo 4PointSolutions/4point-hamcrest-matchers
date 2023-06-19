@@ -5,12 +5,16 @@ import static org.hamcrest.Matchers.*;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 import org.hamcrest.Description;
+import org.hamcrest.FeatureMatcher;
+import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 
+import com._4point.testing.matchers.aem.HtmlForm;
 import com._4point.testing.matchers.aem.Pdf;
 import com._4point.testing.matchers.aem.Pdf.PdfException;
 
@@ -66,7 +70,7 @@ public class ResponseMatchers {
 	 * 	the expected Status 
 	 * @return The matcher
 	 */
-	public static TypeSafeDiagnosingMatcher<Response> isStatus(Status expectedStatus) {
+	public static Matcher<Response> isStatus(Status expectedStatus) {
 		return new IsStatus(expectedStatus);
 	}
 
@@ -101,7 +105,7 @@ public class ResponseMatchers {
 	 * 	the expected MediaType
 	 * @return the matcher
 	 */
-	public static TypeSafeDiagnosingMatcher<Response> hasMediaType(MediaType expectedMediaType) {
+	public static Matcher<Response> hasMediaType(MediaType expectedMediaType) {
 		return new HasMediaType(expectedMediaType); 
 	}
 
@@ -132,7 +136,7 @@ public class ResponseMatchers {
 	 * 
 	 * @return the matcher
 	 */
-	public static TypeSafeDiagnosingMatcher<Response> hasEntity() {
+	public static Matcher<Response> hasEntity() {
 		return new HasEntity(true); 
 	}
 
@@ -141,11 +145,25 @@ public class ResponseMatchers {
 	 * 
 	 * @return the matcher
 	 */
-	public static TypeSafeDiagnosingMatcher<Response> doesNotHaveEntity() {
+	public static Matcher<Response> doesNotHaveEntity() {
 		return new HasEntity(false); 
 	}
 	
 	
+	public static Matcher<Response> hasEntityMatching(Matcher<byte[]> byteMatcher) {
+		return new FeatureMatcher<Response, byte[]>(byteMatcher, "Response entity", "Response entity") {
+			@Override
+			protected byte[] featureValueOf(Response actual) {
+				assertThat(actual, hasEntity());
+				return readEntityBytes(actual);
+			}
+		};
+	}
+
+	public static Matcher<Response> hasEntityEqualTo(byte[] bytes) {
+		return hasEntityMatching(is(bytes));
+	}
+
 	private static byte[] readEntityBytes(Response result) {
 		try {
 			return ((InputStream) result.getEntity()).readAllBytes();
@@ -173,11 +191,29 @@ public class ResponseMatchers {
 		return Pdf.from(readEntityBytes(response));
 	}
 
-	// TODO: Implement this.
-//	public static Pdf expectingHtmlForm(Response response) {
-//		assertThat(response, allOf(isStatus(Status.OK), hasMediaType(MediaType.TEXT_HTML_TYPE), hasEntity()));
-//		
-//	}
+	/**
+	 * Performs a series of checks on the Response object to validate that it is a response containing
+	 * HTML and then returns an HtmlForm object for further validation.
+	 * 
+	 * * it ensures the ContentType header is test/html
+	 * * it ensures the Status is OK
+	 * * it ensures there is a body in the response
+	 * * it reads the body into a HtmlForm object which parses the body using an Html parser.
+	 * 
+	 * @param response
+	 *   the Response object to be validated
+	 * @param baseUri
+	 * @return the valid HtmlForm object
+	 * @throws IllegalStateException thrown if there are any I/O or parsing errors when validating the Html 
+	 */
+	public static HtmlForm expectingHtmlForm(Response response, URI baseUri) {
+		assertThat(response, allOf(isStatus(Status.OK), hasMediaType(MediaType.TEXT_HTML_TYPE), hasEntity()));
+		try {
+			return HtmlForm.create(readEntityBytes(response), baseUri);
+		} catch (IOException e) {
+			throw new IllegalStateException("Error while reading Html from response entiry.", e);
+		}
+	}
 	
 	private static String readEntityToString(Response result) {
 		return new String(readEntityBytes(result), StandardCharsets.UTF_8);
