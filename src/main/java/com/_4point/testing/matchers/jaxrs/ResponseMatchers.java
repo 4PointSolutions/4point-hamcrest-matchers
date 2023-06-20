@@ -150,16 +150,38 @@ public class ResponseMatchers {
 	}
 	
 	
+	/**
+	 * Creates a matcher that allows someone to validate the bytes in the response entity.
+	 * The matcher fails if the Response has no entity to match against.
+	 * 
+	 * @param byteMatcher
+	 *   a matcher that validates the bytes in the response enrity
+	 * @return the matcher
+	 */
 	public static Matcher<Response> hasEntityMatching(Matcher<byte[]> byteMatcher) {
 		return new FeatureMatcher<Response, byte[]>(byteMatcher, "Response entity", "Response entity") {
+			private byte[] entityBytes = null;
 			@Override
 			protected byte[] featureValueOf(Response actual) {
-				assertThat(actual, hasEntity());
-				return readEntityBytes(actual);
+				// This method gets called twice for failures, but we can only read the entity once, so
+				// I need to cache it for the second call.
+				if (entityBytes == null) {
+					// If this is the first time into this, read the entity.
+					assertThat(actual, hasEntity());
+					entityBytes = readEntityBytes(actual);
+				}
+				return entityBytes;
 			}
 		};
 	}
 
+	/**
+	 * Creates a matcher that compares the Response bytes with a provided bute array to see if they match.
+	 * 
+	 * @param bytes
+	 *   a byte array to be matched against
+	 * @return the matcher
+	 */
 	public static Matcher<Response> hasEntityEqualTo(byte[] bytes) {
 		return hasEntityMatching(is(bytes));
 	}
