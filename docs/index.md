@@ -20,3 +20,5 @@ For Maven, the following entry in the pom.xml file is required:
 		<scope>test</scope>
 	</dependency>
 ```
+
+See the [JavaDocs](javadocs/0.0.1-SNAPSHOT/apidocs/) for details.

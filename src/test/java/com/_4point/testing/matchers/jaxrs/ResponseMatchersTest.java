@@ -4,6 +4,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.ByteArrayInputStream;
+
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -107,4 +109,45 @@ class ResponseMatchersTest {
 				));		
 	}
 
+	@Test
+	void testHasEntityMatching_pass(@Mock Response response) {
+		byte[] testData = "Test Data".getBytes();
+		Mockito.when(response.hasEntity()).thenReturn(true);
+		Mockito.when(response.getEntity()).thenReturn(new ByteArrayInputStream(testData));
+		
+		assertThat(response, ResponseMatchers.hasEntityMatching(is(testData)));
+	}
+
+	@Test
+	void testHasEntityMatching_fail(@Mock Response response) {
+		byte[] testData = "Test Data".getBytes();
+		Mockito.when(response.hasEntity()).thenReturn(true);
+		Mockito.when(response.getEntity()).thenReturn(new ByteArrayInputStream("Some other data".getBytes()));
+		
+		AssertionError ex = assertThrows(AssertionError.class, ()->assertThat(response, ResponseMatchers.hasEntityMatching(is(testData))));
+		String msg = ex.getMessage();
+		assertNotNull(msg);
+		assertThat(msg, containsString("Response entity"));
+	}
+
+	@Test
+	void testHasEntityEqualTo_pass(@Mock Response response) {
+		byte[] testData = "Test Data".getBytes();
+		Mockito.when(response.hasEntity()).thenReturn(true);
+		Mockito.when(response.getEntity()).thenReturn(new ByteArrayInputStream(testData));
+		
+		assertThat(response, ResponseMatchers.hasEntityEqualTo(testData));
+	}
+
+	@Test
+	void testHasEntityEqualTo_fail(@Mock Response response) {
+		byte[] testData = "Test Data".getBytes();
+		Mockito.when(response.hasEntity()).thenReturn(true);
+		Mockito.when(response.getEntity()).thenReturn(new ByteArrayInputStream("Some other data".getBytes()));
+		
+		AssertionError ex = assertThrows(AssertionError.class, ()->assertThat(response, ResponseMatchers.hasEntityEqualTo(testData)));
+		String msg = ex.getMessage();
+		assertNotNull(msg);
+		assertThat(msg, containsString("Response entity"));
+	}
 }

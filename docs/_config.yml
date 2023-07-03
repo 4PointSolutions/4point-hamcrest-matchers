@@ -1,0 +1,2 @@
+# Force inclusion of _4point diretcory.
+include: [".htaccess","_4point/"]
