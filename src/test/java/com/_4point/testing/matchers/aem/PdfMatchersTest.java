@@ -1,5 +1,6 @@
 package com._4point.testing.matchers.aem;
 
+import static com._4point.testing.matchers.aem.PdfTestConstants.SAMPLE_FILES_DIR;
 import static org.hamcrest.MatcherAssert.assertThat; 
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -16,8 +17,6 @@ import org.junit.jupiter.params.provider.EnumSource;
 class PdfMatchersTest {
 
 	private static final String BAD_FONT_NAME = "BadFontName";
-	private static final Path RESOURCES_DIR = Path.of("src","test","resources");
-	private static final Path SAMPLE_FILES_DIR = RESOURCES_DIR.resolve("SampleFiles");
 	
 	private enum TestCase {
 		SampleFormNonInteractive("SampleFormNonInteractive.pdf", false, false, false, false, List.of("MyriadPro-Regular"), List.of()),

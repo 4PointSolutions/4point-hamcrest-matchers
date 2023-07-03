@@ -19,6 +19,7 @@
 		<pdfbox.version>2.0.28</pdfbox.version>
 		<junit.version>5.9.3</junit.version>
 		<jakarta.ws.rs-api.version>3.1.0</jakarta.ws.rs-api.version>
+		<pdfcompare.version>1.1.61</pdfcompare.version>
 
 		<!-- Testing Dependencies -->
 		<mockito.version>5.1.1</mockito.version>
@@ -59,6 +60,11 @@
 			<artifactId>jakarta.ws.rs-api</artifactId>
 			<version>${jakarta.ws.rs-api.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>de.redsix</groupId>
+			<artifactId>pdfcompare</artifactId>
+			<version>${pdfcompare.version}</version>
+		</dependency>		
 		<!-- Testing Dependencies -->
 		<dependency>
 			<groupId>org.mockito</groupId>
