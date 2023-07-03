@@ -74,7 +74,7 @@ class PdfMatchersTest {
 		
 	}
 	
-	void performTest(Pdf pdf, Matcher<Pdf> matcher, Matcher<String> msgMatcher, boolean shouldPass) {
+	private void performTest(Pdf pdf, Matcher<Pdf> matcher, Matcher<String> msgMatcher, boolean shouldPass) {
 		if (shouldPass) {
 			testForPass(pdf, matcher);
 		} else {
@@ -82,11 +82,11 @@ class PdfMatchersTest {
 		}
 	}
 	
-	void testForPass(Pdf pdf, Matcher<Pdf> matcher) {
+	private void testForPass(Pdf pdf, Matcher<Pdf> matcher) {
 		assertThat(pdf, matcher);
 	}
 	
-	void testForFail(Pdf pdf, Matcher<Pdf> matcher, Matcher<String> msgMatcher) {
+	private void testForFail(Pdf pdf, Matcher<Pdf> matcher, Matcher<String> msgMatcher) {
 		AssertionError ex = assertThrows(AssertionError.class, ()->assertThat(pdf, matcher));
 		String msg = ex.getMessage();
 		assertNotNull(msg);
