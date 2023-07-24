@@ -1,5 +1,6 @@
 package com._4point.testing.matchers.aem;
 
+import static com._4point.testing.matchers.aem.PdfTestConstants.SAMPLE_FILES_DIR;
 import static org.hamcrest.MatcherAssert.assertThat; 
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -16,8 +17,6 @@ import org.junit.jupiter.params.provider.EnumSource;
 class PdfMatchersTest {
 
 	private static final String BAD_FONT_NAME = "BadFontName";
-	private static final Path RESOURCES_DIR = Path.of("src","test","resources");
-	private static final Path SAMPLE_FILES_DIR = RESOURCES_DIR.resolve("SampleFiles");
 	
 	private enum TestCase {
 		SampleFormNonInteractive("SampleFormNonInteractive.pdf", false, false, false, false, List.of("MyriadPro-Regular"), List.of()),
@@ -74,7 +73,7 @@ class PdfMatchersTest {
 		
 	}
 	
-	void performTest(Pdf pdf, Matcher<Pdf> matcher, Matcher<String> msgMatcher, boolean shouldPass) {
+	private void performTest(Pdf pdf, Matcher<Pdf> matcher, Matcher<String> msgMatcher, boolean shouldPass) {
 		if (shouldPass) {
 			testForPass(pdf, matcher);
 		} else {
@@ -82,11 +81,11 @@ class PdfMatchersTest {
 		}
 	}
 	
-	void testForPass(Pdf pdf, Matcher<Pdf> matcher) {
+	private void testForPass(Pdf pdf, Matcher<Pdf> matcher) {
 		assertThat(pdf, matcher);
 	}
 	
-	void testForFail(Pdf pdf, Matcher<Pdf> matcher, Matcher<String> msgMatcher) {
+	private void testForFail(Pdf pdf, Matcher<Pdf> matcher, Matcher<String> msgMatcher) {
 		AssertionError ex = assertThrows(AssertionError.class, ()->assertThat(pdf, matcher));
 		String msg = ex.getMessage();
 		assertNotNull(msg);
