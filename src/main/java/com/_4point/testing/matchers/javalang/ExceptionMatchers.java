@@ -16,6 +16,10 @@ import org.hamcrest.Matchers;
  */
 public class ExceptionMatchers {
 
+	// Prevent instantiation of this class
+	private ExceptionMatchers() {
+	}
+
 	/**
 	 * Matcher that validates that an exception's message contains all the expected strings.
 	 * 

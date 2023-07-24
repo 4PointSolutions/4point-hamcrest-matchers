@@ -10,6 +10,10 @@ import org.hamcrest.TypeSafeDiagnosingMatcher;
  *
  */
 public class HtmlFormMatchers {
+	// Prevent instantiation of this class
+	private HtmlFormMatchers() {
+	}
+
 	private static class HasTitle extends TypeSafeDiagnosingMatcher<HtmlForm> {
 
 		private final String expectedTitle;

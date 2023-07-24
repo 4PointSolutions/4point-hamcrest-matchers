@@ -30,6 +30,10 @@ import jakarta.ws.rs.core.Response.StatusType;
  */
 public class ResponseMatchers {
 	
+	// Prevent instantiation of this class
+	private ResponseMatchers() {
+	}
+
 	/**
 	 * Content-type string for "application/pdf"
 	 */

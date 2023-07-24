@@ -15,6 +15,10 @@ import com._4point.testing.matchers.aem.Pdf.PdfException;
  */
 public class PdfMatchers {
 
+	// Prevent instantiation of this class
+	private PdfMatchers() {
+	}
+
 	private static class IsInteractive extends TypeSafeDiagnosingMatcher<Pdf> {
 
 		@Override
