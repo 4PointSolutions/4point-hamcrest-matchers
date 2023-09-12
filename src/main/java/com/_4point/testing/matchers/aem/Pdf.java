@@ -13,6 +13,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.cos.COSArray;
 import org.apache.pdfbox.cos.COSBase;
 import org.apache.pdfbox.cos.COSDictionary;
@@ -232,7 +233,7 @@ public class Pdf implements AutoCloseable {
 	 */
 	public static Pdf from(byte[] docBytes) throws PdfException  {
 		 try {
-			return new Pdf(PDDocument.load(docBytes));
+			return new Pdf(Loader.loadPDF(docBytes));
 		} catch (IOException e) {
 			throw new PdfException(e);
 		}
@@ -246,9 +247,9 @@ public class Pdf implements AutoCloseable {
 	 * @return the Pdf object
 	 * @throws PdfException thrown if there are errors reading the Pdf byte stream
 	 */
-	public static Pdf from(InputStream docStream) throws PdfException  {
-		 try {
-			return new Pdf(PDDocument.load(docStream));
+	public static Pdf from(InputStream docStream) throws PdfException {
+		try {
+			return Pdf.from(docStream.readAllBytes());
 		} catch (IOException e) {
 			throw new PdfException(e);
 		}
@@ -264,7 +265,7 @@ public class Pdf implements AutoCloseable {
 	 */
 	public static Pdf from(Path docPath) throws PdfException {
 		try {
-			return Pdf.from(Files.newInputStream(docPath));
+			return Pdf.from(Files.readAllBytes(docPath));
 		} catch (PdfException | IOException e) {
 			throw new PdfException("Error reading file (" + docPath.toString() + ")", e);
 		}
