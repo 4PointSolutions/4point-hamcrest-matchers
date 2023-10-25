@@ -150,4 +150,27 @@ class ResponseMatchersTest {
 		assertNotNull(msg);
 		assertThat(msg, containsString("Response entity"));
 	}
+	
+	@Test
+	void testHasStringEntityMatching_pass(@Mock Response response) {
+		String testData = "Test Data";
+		Mockito.when(response.hasEntity()).thenReturn(true);
+		Mockito.when(response.getEntity()).thenReturn(new ByteArrayInputStream(testData.getBytes()));
+		
+		assertThat(response, ResponseMatchers.hasStringEntityMatching(containsString(testData)));
+	}
+
+	@Test
+	void testHasStringEntityMatching_fail(@Mock Response response) {
+		String testData = "Test Data";
+		Mockito.when(response.hasEntity()).thenReturn(true);
+		Mockito.when(response.getEntity()).thenReturn(new ByteArrayInputStream("Some other data".getBytes()));
+		
+		AssertionError ex = assertThrows(AssertionError.class, ()->assertThat(response, ResponseMatchers.hasStringEntityMatching(containsString(testData))));
+		String msg = ex.getMessage();
+		assertNotNull(msg);
+		assertThat(msg, containsString("Response entity"));
+	}
+
+
 }

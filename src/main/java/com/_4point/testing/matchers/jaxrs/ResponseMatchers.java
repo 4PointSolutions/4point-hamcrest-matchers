@@ -179,6 +179,31 @@ public class ResponseMatchers {
 		};
 	}
 
+	 /**
+	 * Creates a matcher that allows someone to validate the response entity as a Srting.
+	 * The matcher fails if the Response has no entity to match against.
+	 * 
+	 * @param byteMatcher
+	 *   a matcher that validates the response entity as a String
+	 * @return the matcher
+	 */
+	public static Matcher<Response> hasStringEntityMatching(Matcher<String> byteMatcher) {
+			return new FeatureMatcher<Response, String>(byteMatcher, "Response entity", "Response entity") {
+				private String entityString = null;
+				@Override
+				protected String featureValueOf(Response actual) {
+					// This method gets called twice for failures, but we can only read the entity once, so
+					// I need to cache it for the second call.
+					if (entityString == null) {
+						// If this is the first time into this, read the entity.
+						assertThat(actual, hasEntity());
+						entityString = readEntityToString(actual);
+					}
+					return entityString;
+				}
+			};
+		}
+
 	/**
 	 * Creates a matcher that compares the Response bytes with a provided bute array to see if they match.
 	 * 
