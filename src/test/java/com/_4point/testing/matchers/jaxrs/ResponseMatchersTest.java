@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -170,6 +171,24 @@ class ResponseMatchersTest {
 		String msg = ex.getMessage();
 		assertNotNull(msg);
 		assertThat(msg, containsString("Response entity"));
+	}
+
+	@Test
+	void testHasStringEntityMatching_ISO8859_pass(@Mock Response response) {
+		String testData = "Test Data é";
+		Mockito.when(response.hasEntity()).thenReturn(true);
+		Mockito.when(response.getEntity()).thenReturn(new ByteArrayInputStream(testData.getBytes(StandardCharsets.ISO_8859_1)));
+		
+		assertThat(response, ResponseMatchers.hasStringEntityMatching(StandardCharsets.ISO_8859_1, containsString(testData)));
+	}
+
+	@Test
+	void testHasStringEntityMatching_ISO8859_fail(@Mock Response response) {
+		String testData = "Test Data é";
+		Mockito.when(response.hasEntity()).thenReturn(true);
+		Mockito.when(response.getEntity()).thenReturn(new ByteArrayInputStream(testData.getBytes(StandardCharsets.UTF_8)));
+		
+		assertThat(response, ResponseMatchers.hasStringEntityMatching(StandardCharsets.ISO_8859_1, not(containsString(testData))));
 	}
 
 

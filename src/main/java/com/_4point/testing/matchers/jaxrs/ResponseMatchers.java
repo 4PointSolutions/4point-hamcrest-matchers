@@ -6,6 +6,7 @@ import static org.hamcrest.Matchers.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
@@ -179,30 +180,46 @@ public class ResponseMatchers {
 		};
 	}
 
+	/**
+	 * Creates a matcher that allows someone to validate the response entity as a Srting.
+	 * The matcher fails if the Response has no entity to match against.
+	 * 
+	 * @param charSet
+	 * 	 the character set the incoming data should be in
+	 * @param stringMatcher
+	 *   a matcher that validates the response entity as a String
+	 * @return the matcher
+	 */
+	public static Matcher<Response> hasStringEntityMatching(Charset charset, Matcher<String> stringMatcher) {
+		return new FeatureMatcher<Response, String>(stringMatcher, "Response entity", "Response entity") {
+			private String entityString = null;
+			@Override
+			protected String featureValueOf(Response actual) {
+				// This method gets called twice for failures, but we can only read the entity once, so
+				// I need to cache it for the second call.
+				if (entityString == null) {
+					// If this is the first time into this, read the entity.
+					assertThat(actual, hasEntity());
+					entityString = readEntityToString(actual, charset);
+				}
+				return entityString;
+			}
+		};
+	}
+
 	 /**
 	 * Creates a matcher that allows someone to validate the response entity as a Srting.
 	 * The matcher fails if the Response has no entity to match against.
 	 * 
-	 * @param byteMatcher
+	 * Current assumes that the incoming data is in UTF-9.
+	 * 
+	 * @param stringMatcher
 	 *   a matcher that validates the response entity as a String
 	 * @return the matcher
 	 */
-	public static Matcher<Response> hasStringEntityMatching(Matcher<String> byteMatcher) {
-			return new FeatureMatcher<Response, String>(byteMatcher, "Response entity", "Response entity") {
-				private String entityString = null;
-				@Override
-				protected String featureValueOf(Response actual) {
-					// This method gets called twice for failures, but we can only read the entity once, so
-					// I need to cache it for the second call.
-					if (entityString == null) {
-						// If this is the first time into this, read the entity.
-						assertThat(actual, hasEntity());
-						entityString = readEntityToString(actual);
-					}
-					return entityString;
-				}
-			};
-		}
+	public static Matcher<Response> hasStringEntityMatching(Matcher<String> stringMatcher) {
+		return hasStringEntityMatching(StandardCharsets.UTF_8, stringMatcher);
+	}
 
 	/**
 	 * Creates a matcher that compares the Response bytes with a provided bute array to see if they match.
@@ -266,7 +283,7 @@ public class ResponseMatchers {
 		}
 	}
 	
-	private static String readEntityToString(Response result) {
-		return new String(readEntityBytes(result), StandardCharsets.UTF_8);
+	private static String readEntityToString(Response result, Charset charset) {
+		return new String(readEntityBytes(result), charset);
 	}
 }
