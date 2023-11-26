@@ -12,73 +12,45 @@ import org.junit.jupiter.params.provider.EnumSource;
 
 class ExceptionMatchersTest {
 
-	@Test
-	void testExceptionMsgContainsAll_OneString_Match() {
-		String expectedMsg = "Test Exception Message";
-		var testException = new IllegalStateException(expectedMsg);
-		
-		assertThat(testException, exceptionMsgContainsAll(expectedMsg));
+	private static final String EXPECTED_PARTIAL_MSG_1 = "Test";
+	private static final String EXPECTED_PARTIAL_MSG_2 = "Exception";
+	private static final String EXPECTED_PARTIAL_MSG_3 = "Message";
+	private static final String EXPECTED_MSG = EXPECTED_PARTIAL_MSG_1 + " " + EXPECTED_PARTIAL_MSG_2 + " " + EXPECTED_PARTIAL_MSG_3;
+	private static final String MISMATCH_STRING = " foo";
+	
+	private enum ExceptionMsgContainsAllScenario {
+		ONE_STRING(exceptionMsgContainsAll(EXPECTED_MSG), exceptionMsgContainsAll(EXPECTED_MSG + MISMATCH_STRING)),
+		TWO_STRINGS(exceptionMsgContainsAll(EXPECTED_PARTIAL_MSG_1, EXPECTED_PARTIAL_MSG_2), exceptionMsgContainsAll(EXPECTED_PARTIAL_MSG_1, MISMATCH_STRING)),
+		THREE_STRINGS(exceptionMsgContainsAll(EXPECTED_PARTIAL_MSG_1, EXPECTED_PARTIAL_MSG_2, EXPECTED_PARTIAL_MSG_3), exceptionMsgContainsAll(MISMATCH_STRING, EXPECTED_PARTIAL_MSG_2, EXPECTED_PARTIAL_MSG_3)),
+		;
+	
+		private final Matcher<Throwable> passingTest;
+		private final Matcher<Throwable> failingTest;
+
+		private ExceptionMsgContainsAllScenario(Matcher<Throwable> matcher, Matcher<Throwable> matcher2) {
+			this.passingTest = matcher;
+			this.failingTest = matcher2;
+		}
 	}
 
-	@Test
-	void testExceptionMsgContainsAll_OneString_Mismatch() {
-		String expectedMsg = "Test Exception Message";
-		String mismatchString = " foo";
-		var testException = new IllegalStateException(expectedMsg);
+	@ParameterizedTest
+	@EnumSource
+	void testExceptionMsgContainsAll_Match(ExceptionMsgContainsAllScenario scenario) {
+		var testException = new IllegalStateException(EXPECTED_MSG);
 		
-		AssertionError ex = assertThrows(AssertionError.class, ()->assertThat(testException, exceptionMsgContainsAll(expectedMsg + mismatchString)));
+		assertThat(testException, scenario.passingTest);
+	}
+
+	@ParameterizedTest
+	@EnumSource
+	void testExceptionMsgContainsAll_Mismatch(ExceptionMsgContainsAllScenario scenario) {
+		var testException = new IllegalStateException(EXPECTED_MSG);
+		
+		AssertionError ex = assertThrows(AssertionError.class, ()->assertThat(testException, scenario.failingTest));
 
 		String msg = ex.getMessage();
 		assertNotNull(msg);
-		assertThat(msg, allOf(containsString(expectedMsg), containsString(mismatchString)));
-	}
-
-	@Test
-	void testExceptionMsgContainsAll_TwoStrings_Match() {
-		String expectedMsg1 = "Test Exception";
-		String expectedMsg2 = "Message";
-		var testException = new IllegalStateException(expectedMsg1 + " " + expectedMsg2);
-		
-		assertThat(testException, exceptionMsgContainsAll(expectedMsg1, expectedMsg2));
-	}
-
-	@Test
-	void testExceptionMsgContainsAll_TwoStrings_Mismatch() {
-		String expectedMsg1 = "Test Exception";
-		String expectedMsg2 = "Message";
-		String mismatchString = " foo";
-		var testException = new IllegalStateException(expectedMsg1 + " " + expectedMsg2);
-		
-		AssertionError ex = assertThrows(AssertionError.class, ()->assertThat(testException, exceptionMsgContainsAll(expectedMsg1, expectedMsg2, mismatchString)));
-
-		String msg = ex.getMessage();
-		assertNotNull(msg);
-		assertThat(msg, allOf(containsString(expectedMsg1), containsString(expectedMsg2), containsString(mismatchString)));
-	}
-
-	@Test
-	void testExceptionMsgContainsAll_ThreeStrings_Match() {
-		String expectedMsg1 = "Test";
-		String expectedMsg2 = "Exception";
-		String expectedMsg3 = "Message";
-		var testException = new IllegalStateException(expectedMsg1 + " " + expectedMsg2 + " - " + expectedMsg3);
-		
-		assertThat(testException, exceptionMsgContainsAll(expectedMsg1, expectedMsg2, expectedMsg3));
-	}
-
-	@Test
-	void testExceptionMsgContainsAll_ThreeStrings_Mismatch() {
-		String expectedMsg1 = "Test";
-		String expectedMsg2 = "Exception";
-		String expectedMsg3 = "Message";
-		String mismatchString = " foo";
-		var testException = new IllegalStateException(expectedMsg1 + " " + expectedMsg2 + " - " + expectedMsg3);
-		
-		AssertionError ex = assertThrows(AssertionError.class, ()->assertThat(testException, exceptionMsgContainsAll(expectedMsg1, expectedMsg2, expectedMsg3, mismatchString)));
-
-		String msg = ex.getMessage();
-		assertNotNull(msg);
-		assertThat(msg, allOf(containsString(expectedMsg1), containsString(expectedMsg2), containsString(expectedMsg3), containsString(mismatchString)));
+		assertThat(msg, allOf(containsString(EXPECTED_PARTIAL_MSG_1), containsString(EXPECTED_PARTIAL_MSG_2), containsString(EXPECTED_PARTIAL_MSG_3), containsString(MISMATCH_STRING)));
 	}
 
 	@Test
