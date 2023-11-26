@@ -84,6 +84,15 @@ public class ExceptionMatchers {
 		}
 	}
 	
+	/**
+	 * Matcher that validates the cause of an exception matches all the matchers provided.
+	 * 
+	 * @param matcher
+	 * 	matcher to test the exceptions cause
+	 * @param matchers
+	 * 	additional matchers to test the exceptions cause
+	 * @return the matcher
+	 */
 	@SafeVarargs
 	public static Matcher<Throwable> hasCauseMatching(Matcher<Throwable> matcher, Matcher<Throwable>...matchers) {
 		if (matchers.length == 0) {
