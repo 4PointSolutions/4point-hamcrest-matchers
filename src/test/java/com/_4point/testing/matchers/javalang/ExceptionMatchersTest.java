@@ -110,6 +110,15 @@ class ExceptionMatchersTest {
 		assertThat(msg, containsString("an exception with cause"));		
 	}
 	
+	@Test
+	void testHasCause_NoCause() {
+		AssertionError ex = assertThrows(AssertionError.class, ()->assertThat(CAUSE_EXCEPTION,hasCause(CAUSE_EXCEPTION)));
+		
+		String msg = ex.getMessage();
+		assertNotNull(msg);
+		assertThat(msg, containsString("an exception with cause"));		
+	}
+
 	
 	private enum ExceptionCauseMatchesScenario {
 		ONE_EXCEPTION(
@@ -145,6 +154,15 @@ class ExceptionMatchersTest {
 	@EnumSource
 	void testHasCauseMatching_Mismatch(ExceptionCauseMatchesScenario scenario) {
 		AssertionError ex = assertThrows(AssertionError.class, ()->assertThat(TEST_EXCEPTION, scenario.failingTest));
+		
+		String msg = ex.getMessage();
+		assertNotNull(msg);
+		assertThat(msg, containsString("an exception with cause"));		
+	}
+
+	@Test
+	void testHasCauseMatching_NoCause() {
+		AssertionError ex = assertThrows(AssertionError.class, ()->assertThat(CAUSE_EXCEPTION, hasCauseMatching(sameInstance(CAUSE_EXCEPTION))));
 		
 		String msg = ex.getMessage();
 		assertNotNull(msg);
