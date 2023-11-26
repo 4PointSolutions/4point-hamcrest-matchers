@@ -33,6 +33,10 @@ public class ExceptionMatchers {
 	 * @return the matcher
 	 */
 	public static Matcher<Throwable> exceptionMsgContainsAll(String firstExpectedString, String...expectedStrings) {
+		if (expectedStrings.length == 0) {
+			// Just one matcher, so use it directly (should produce a better error message)
+			return new ExceptionMsgContains(Matchers.containsString(firstExpectedString));
+		}
 		@SuppressWarnings("unchecked")
 		Matcher<String>[] containsList = Stream.concat( Stream.of(firstExpectedString), Arrays.stream(expectedStrings))
 											   .map(s->Matchers.containsString(s))
@@ -83,7 +87,7 @@ public class ExceptionMatchers {
 	@SafeVarargs
 	public static Matcher<Throwable> hasCauseMatching(Matcher<Throwable> matcher, Matcher<Throwable>...matchers) {
 		if (matchers.length == 0) {
-			// Just one matcher
+			// Just one matcher, so use it directly (should produce a better error message)
 			return new HasCauseMatching(matcher);
 		}
 		@SuppressWarnings("unchecked")
