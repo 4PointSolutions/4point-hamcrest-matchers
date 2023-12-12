@@ -184,7 +184,7 @@ public class ResponseMatchers {
 	 * Creates a matcher that allows someone to validate the response entity as a Srting.
 	 * The matcher fails if the Response has no entity to match against.
 	 * 
-	 * @param charSet
+	 * @param charset
 	 * 	 the character set the incoming data should be in
 	 * @param stringMatcher
 	 *   a matcher that validates the response entity as a String
@@ -271,6 +271,7 @@ public class ResponseMatchers {
 	 * @param response
 	 *   the Response object to be validated
 	 * @param baseUri
+	 * 	 base location of the form
 	 * @return the valid HtmlForm object
 	 * @throws IllegalStateException thrown if there are any I/O or parsing errors when validating the Html 
 	 */
