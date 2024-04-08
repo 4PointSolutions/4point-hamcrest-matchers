@@ -6,6 +6,27 @@
 	<artifactId>4point-hamcrest-matchers</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Hamcrest Matchers for unit testing at 4Point</name>
+	<description>A library containing Hamcrest matchers for objects commonly encountered in 4Point software projects.</description>
+
+	<licenses>
+		<license>
+			<name>The Apache License, Version 2.0</name>
+			<url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
+
+	<organization>
+		<name>4Point Solutions</name>
+		<url>https://www.4point.com</url>
+	</organization>
+	<developers>
+		<developer>
+			<name>4Point Solutions</name>
+			<email>open.source@4point.com</email>
+			<organization>4Point Solutions Ltd.</organization>
+			<organizationUrl>https://www.4point.com</organizationUrl>
+		</developer>
+	</developers>
 
 	<properties>
 		<java.version>17</java.version>
@@ -13,31 +34,121 @@
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
+		<!-- Plugin Dependencies -->
+		<maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
+		<maven-source-plugin.version>3.2.1</maven-source-plugin.version>
+		<maven-javadoc-plugin.version>3.3.1</maven-javadoc-plugin.version>
+		<nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
+		
 		<!-- Project Dependencies -->
 		<hamcrest.version>2.2</hamcrest.version>
-		<jsoup.version>1.17.1</jsoup.version>
-		<pdfbox.version>3.0.1</pdfbox.version>
-		<junit.version>5.10.1</junit.version>
+		<jsoup.version>1.17.2</jsoup.version>
+		<pdfbox.version>3.0.2</pdfbox.version>
+		<junit.version>5.10.2</junit.version>
 		<jakarta.ws.rs-api.version>3.1.0</jakarta.ws.rs-api.version>
-		<pdfcompare.version>1.1.64</pdfcompare.version>
+		<pdfcompare.version>1.2.2</pdfcompare.version>
 
 		<!-- Testing Dependencies -->
-		<mockito.version>5.7.0</mockito.version>
+		<mockito.version>5.11.0</mockito.version>
 		<junit-addons.version>1.4</junit-addons.version>
 	</properties>
 
 	<distributionManagement>
+		<snapshotRepository>
+			<id>github</id>
+			<name>GitHub 4PointSolutions Apache Maven Packages</name>
+			<url>https://maven.pkg.github.com/4PointSolutions/4point-hamcrest-matchers</url>
+		</snapshotRepository>
 		<repository>
 			<id>github</id>
 			<name>GitHub 4PointSolutions Apache Maven Packages</name>
 			<url>https://maven.pkg.github.com/4PointSolutions/4point-hamcrest-matchers</url>
 		</repository>
+		<!-- Commented out for now - points to Maven Central
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>
+				https://s01.oss.sonatype.org/service/local/staging/deploy/maven2</url>
+		</repository>
+		-->
 	</distributionManagement>
 
 	<scm>
+		<connection>scm:git:https://github.com/4PointSolutions/4point-hamcrest-matchers.git</connection>
 		<developerConnection>scm:git:https://github.com/4PointSolutions/4point-hamcrest-matchers.git</developerConnection>
+		<url>https://github.com/4PointSolutions/4point-hamcrest-matchers</url>
 	</scm>
 
+	<build>
+		<plugins>
+			<!-- Commented out until I figure out GPG and GitHUb actions
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<version>${maven-gpg-plugin.version}</version>
+				<executions>
+					<execution>
+						<id>sign-artifacts</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+						<configuration>
+							<gpgArguments>
+								<arg>-RemoveThis-pinentry-mode</arg>
+								<arg>loopback</arg>
+							</gpgArguments>
+						</configuration> 
+					</execution>
+				</executions>
+			</plugin>
+			-->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>${maven-source-plugin.version}</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>${maven-javadoc-plugin.version}</version>
+				<configuration>
+					<encoding>UTF-8</encoding>
+				</configuration>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>${nexus-staging-maven-plugin.version}</version>
+				<extensions>true</extensions>
+				<configuration>
+					<serverId>ossrh</serverId>
+					<nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+					<autoReleaseAfterClose>true</autoReleaseAfterClose>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 	<dependencies>
 		<dependency>
 			<groupId>org.hamcrest</groupId>
@@ -68,7 +179,7 @@
 			<groupId>de.redsix</groupId>
 			<artifactId>pdfcompare</artifactId>
 			<version>${pdfcompare.version}</version>
-		</dependency>		
+		</dependency>
 		<!-- Testing Dependencies -->
 		<dependency>
 			<groupId>org.mockito</groupId>
