@@ -32,12 +32,7 @@ jobs:
         # Verify gpg secret key
         gpg --list-secret-keys --keyid-format LONG
 
-    - name: Build with Maven
-      run: mvn --batch-mode --no-transfer-progress -Dgpg.passphrase=${{ secrets.OPEN_SOURCE_AT_4POINT_GPG_PASSPHRASE_PASSWORD }} package
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
-
-    - name: Publish to GitHub Packages Apache Maven
-      run: mvn --batch-mode --no-transfer-progress deploy -s $GITHUB_WORKSPACE/settings.xml
+    - name: Build and Publish to GitHub Packages Apache Maven
+      run: mvn --batch-mode --no-transfer-progress -Dgpg.passphrase=${{ secrets.OPEN_SOURCE_AT_4POINT_GPG_PASSPHRASE_PASSWORD }} deploy -s $GITHUB_WORKSPACE/settings.xml
       env:
         GITHUB_TOKEN: ${{ github.token }}
