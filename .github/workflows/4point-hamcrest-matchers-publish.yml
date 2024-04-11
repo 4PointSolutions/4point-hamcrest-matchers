@@ -33,12 +33,12 @@ jobs:
         gpg --list-secret-keys --keyid-format LONG
 
     - name: Build and Publish to GitHub Packages Apache Maven
-      run: mvn \
-           --batch-mode \
-           --no-transfer-progress \
-           --define gpg.passphrase=${{ secrets.OPEN_SOURCE_AT_4POINT_GPG_PASSPHRASE_PASSWORD }} \
-           --settings $GITHUB_WORKSPACE/settings.xml \
-           --activate-profiles release \
+      run: mvn 
+           --batch-mode 
+           --no-transfer-progress 
+           --define gpg.passphrase=${{ secrets.OPEN_SOURCE_AT_4POINT_GPG_PASSPHRASE_PASSWORD }} 
+           --settings $GITHUB_WORKSPACE/settings.xml 
+           --activate-profiles release 
            deploy
       env:
         GITHUB_TOKEN: ${{ github.token }}
