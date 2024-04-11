@@ -33,7 +33,7 @@ jobs:
         gpg --list-secret-keys --keyid-format LONG
 
     - name: Build with Maven
-      run: mvn ---batch-mode --no-transfer-progress -Dgpg.passphrase=${{ secrets.OPEN_SOURCE_AT_4POINT_GPG_PASSPHRASE_PASSWORD }} package
+      run: mvn --batch-mode --no-transfer-progress -Dgpg.passphrase=${{ secrets.OPEN_SOURCE_AT_4POINT_GPG_PASSPHRASE_PASSWORD }} package
       env:
         GITHUB_TOKEN: ${{ github.token }}
 
