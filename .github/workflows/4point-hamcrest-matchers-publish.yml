@@ -38,7 +38,7 @@ jobs:
            --no-transfer-progress 
            --define gpg.passphrase=${{ secrets.OPEN_SOURCE_AT_4POINT_GPG_PASSPHRASE_PASSWORD }} 
            --settings $GITHUB_WORKSPACE/settings.xml 
-           --activate-profiles release 
+           --activate-profiles full 
            deploy
       env:
         GITHUB_TOKEN: ${{ github.token }}
