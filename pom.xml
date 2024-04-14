@@ -195,26 +195,6 @@
 			<version>${mockito.version}</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>junit-addons</groupId>
-			<artifactId>junit-addons</artifactId>
-			<version>${junit-addons.version}</version>
-			<scope>test</scope>
-			<exclusions>
-				<exclusion>	<!-- Exclude this really old version of junit that junit-addons depends on -->
-					<groupId>junit</groupId>
-					<artifactId>junit</artifactId>
-				</exclusion>
-				<exclusion>	<!-- Exclude this really old version of xerces that	junit-addons depends on -->
-					<groupId>xerces</groupId>
-					<artifactId>xercesImpl</artifactId>
-				</exclusion>
-				<exclusion>	<!-- Exclude this really old version of xerces that	junit-addons depends on -->
-					<groupId>xerces</groupId>
-					<artifactId>xmlParserAPIs</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
 	</dependencies>
 
 </project>
