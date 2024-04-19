@@ -7,9 +7,9 @@ jobs:
   call-maven:
     uses: ./.github/workflows/4point-hamcrest-matchers-maven.yml
     with:
-      maven-goals: "release:clean release:prepare release:perform deploy"
+      maven-goals: deploy
       maven-profiles: full
-      maven-options: "--errors --debug"
+      maven-options: "--errors --debug "
     secrets:
       GPG_PASSPHRASE: ${{ secrets.OPEN_SOURCE_AT_4POINT_GPG_PASSPHRASE }}
       GPG_PASSPHRASE_PASSWORD: ${{ secrets.OPEN_SOURCE_AT_4POINT_GPG_PASSPHRASE_PASSWORD }}
