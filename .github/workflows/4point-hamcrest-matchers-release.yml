@@ -7,7 +7,7 @@ jobs:
   call-maven:
     uses: ./.github/workflows/4point-hamcrest-matchers-maven.yml
     with:
-      maven-goals: "release:clean release:prepare release:perform"
+      maven-goals: "release:clean release:prepare release:perform deploy"
       maven-profiles: full
       maven-options: "--errors --debug"
     secrets:
