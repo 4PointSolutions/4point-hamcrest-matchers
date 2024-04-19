@@ -1,17 +1,13 @@
-name: 4point-hamcrest-matchers automated build
+name: 4point-hamcrest-matchers automated release
 
 on:
-  push:
-    paths:
-    - '**'
-    - '!docs/**'
   workflow_dispatch:
 
 jobs:
   call-maven:
     uses: ./.github/workflows/4point-hamcrest-matchers-maven.yml
     with:
-      maven-goals: deploy
+      maven-goals: "release:prepare release:perform"
       maven-profiles: full
     secrets:
       GPG_PASSPHRASE: ${{ secrets.OPEN_SOURCE_AT_4POINT_GPG_PASSPHRASE }}
