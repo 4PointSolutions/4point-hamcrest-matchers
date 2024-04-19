@@ -44,6 +44,11 @@ jobs:
         # Verify gpg secret key
         gpg --list-secret-keys --keyid-format LONG
 
+    - name: Configure Git user
+      run: |
+        git config user.email "actions@github.com"
+        git config user.name "GitHub Actions"
+
     - name: Build and Publish to GitHub Packages Apache Maven
       run: mvn 
            --batch-mode 
