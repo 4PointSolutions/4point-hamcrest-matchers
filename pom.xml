@@ -6,6 +6,7 @@
 	<name>Hamcrest Matchers for unit testing at 4Point</name>
 	<description>A library containing Hamcrest matchers for objects commonly encountered in 4Point software projects.</description>
 	<url>https://github.com/4PointSolutions/4point-hamcrest-matchers</url>
+	<inceptionYear>2023</inceptionYear>
 
 	<licenses>
 		<license>
@@ -38,6 +39,7 @@
 		<maven-source-plugin.version>3.2.1</maven-source-plugin.version>
 		<maven-javadoc-plugin.version>3.3.1</maven-javadoc-plugin.version>
 		<central-publishing-maven-plugin.version>0.4.0</central-publishing-maven-plugin.version>
+		<jreleaser-plugin.version>1.11.0</jreleaser-plugin.version>
 		
 		<!-- Project Dependencies -->
 		<hamcrest.version>2.2</hamcrest.version>
@@ -59,9 +61,9 @@
 			<url>https://maven.pkg.github.com/4PointSolutions/4point-hamcrest-matchers</url>
 		</snapshotRepository>
 		<repository>
-			<id>github</id>
-			<name>GitHub 4PointSolutions Apache Maven Packages</name>
-			<url>https://maven.pkg.github.com/4PointSolutions/4point-hamcrest-matchers</url>
+			<id>localStaging</id>
+			<name>Local Staging Directory</name>
+			<url>file:./target/staging-deploy</url>
 		</repository>
 	</distributionManagement>
 
@@ -135,6 +137,7 @@
 			<id>release</id>
 			<build>
 				<plugins>
+					<!--
 					<plugin>
 						<groupId>org.sonatype.central</groupId>
 						<artifactId>central-publishing-maven-plugin</artifactId>
@@ -143,6 +146,56 @@
 						<configuration>
 							<publishingServerId>central</publishingServerId>
 							<tokenAuth>true</tokenAuth>
+						</configuration>
+					</plugin>
+					-->
+					<plugin>
+						<groupId>org.jreleaser</groupId>
+						<artifactId>jreleaser-maven-plugin</artifactId>
+						<version>${jreleaser-plugin.version}</version>
+						<inherited>false</inherited>
+						<configuration>
+							<jreleaser>
+								<release>
+									<github>
+										<owner>4PointSolutions</owner>
+										<overwrite>true</overwrite>
+									</github>
+								</release>
+								<files>
+									<globs>
+										<glob>
+											<pattern>./target/staging-deploy/**/${project.artifactId}-${project.version}*.*</pattern>
+										</glob>
+									</globs>
+								</files>
+								<deploy>
+									<maven>
+										<github>
+											<githubPackages>
+												<active>ALWAYS</active>
+												<applyMavenCentralRules>false</applyMavenCentralRules>
+												<url>https://maven.pkg.github.com/4PointSolutions/4point-hamcrest-matchers</url>
+												<stagingRepositories>
+													<stagingRepository>./target/staging-deploy</stagingRepository>
+												</stagingRepositories>
+											</githubPackages>
+										</github>
+										<nexus2>
+											<maven-central>
+												<active>NEVER</active>
+												<applyMavenCentralRules>true</applyMavenCentralRules>
+												<url>https://s01.oss.sonatype.org/service/local</url>
+												<stagingRepositories>
+													<stagingRepository>./target/staging-deploy</stagingRepository>
+												</stagingRepositories>
+												<closeRepository>false</closeRepository>
+												<releaseRepository>false</releaseRepository>
+											</maven-central>
+										</nexus2>
+									</maven>
+								</deploy>
+							</jreleaser>
 						</configuration>
 					</plugin>
 				</plugins>
