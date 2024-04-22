@@ -189,6 +189,8 @@
 												<stagingRepositories>
 													<stagingRepository>./target/staging-deploy</stagingRepository>
 												</stagingRepositories>
+												<sign>false</sign> <!-- Artifacts are already signed -->
+												<checksums>false</checksums> <!-- Artifacts are already checksummed --> 
 												<closeRepository>false</closeRepository>
 												<releaseRepository>false</releaseRepository>
 											</maven-central>
