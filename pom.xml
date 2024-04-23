@@ -71,8 +71,8 @@
 		<connection>scm:git:https://github.com/4PointSolutions/4point-hamcrest-matchers.git</connection>
 		<developerConnection>scm:git:https://github.com/4PointSolutions/4point-hamcrest-matchers.git</developerConnection>
 		<url>https://github.com/4PointSolutions/4point-hamcrest-matchers</url>
-	  <tag>HEAD</tag>
-  </scm>
+		<tag>HEAD</tag>
+	</scm>
 
 	<profiles>
 		<profile>
