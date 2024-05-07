@@ -48,6 +48,7 @@
 		<junit.version>5.10.2</junit.version>
 		<jakarta.ws.rs-api.version>3.1.0</jakarta.ws.rs-api.version>
 		<pdfcompare.version>1.2.2</pdfcompare.version>
+		<image-comparison.version>4.4.0</image-comparison.version>
 
 		<!-- Testing Dependencies -->
 		<mockito.version>5.11.0</mockito.version>
@@ -247,6 +248,11 @@
 			<groupId>de.redsix</groupId>
 			<artifactId>pdfcompare</artifactId>
 			<version>${pdfcompare.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.romankh3</groupId>
+			<artifactId>image-comparison</artifactId>
+			<version>${image-comparison.version}</version>
 		</dependency>
 		<!-- Testing Dependencies -->
 		<dependency>
