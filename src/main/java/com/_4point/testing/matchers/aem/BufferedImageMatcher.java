@@ -1,9 +1,15 @@
 package com._4point.testing.matchers.aem;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Path;
 import java.util.function.Consumer;
 import java.util.function.Function;
+
+import javax.imageio.ImageIO;
 
 import org.hamcrest.Description;
 import org.hamcrest.FeatureMatcher;
@@ -61,7 +67,7 @@ public class BufferedImageMatcher extends TypeSafeDiagnosingMatcher<BufferedImag
 	 * @param expected the expected image
 	 * @return a matcher that compares another image to the expected image
 	 */
-	public static Matcher<BufferedImage> compareTo(BufferedImage expected) {
+	public static Matcher<BufferedImage> isSameAs(BufferedImage expected) {
 		return new BufferedImageMatcher(expected);
 	}
 
@@ -70,7 +76,7 @@ public class BufferedImageMatcher extends TypeSafeDiagnosingMatcher<BufferedImag
 	 * @param resultImageConsumer a Consumer to save the comparison resuit if the match fails
 	 * @return a matcher that compares another image to the expected image and calls the Consumer if they don't match 
 	 */
-	public static Matcher<BufferedImage> compareTo(BufferedImage expected, Consumer<BufferedImage> resultImageConsumer) {
+	public static Matcher<BufferedImage> isSameAs(BufferedImage expected, Consumer<BufferedImage> resultImageConsumer) {
 		return new BufferedImageMatcher(expected, resultImageConsumer);
 	}
 	
@@ -91,7 +97,7 @@ public class BufferedImageMatcher extends TypeSafeDiagnosingMatcher<BufferedImag
 	 * @return a matcher that compares another image file to the expected image file
 	 */
 	public static Matcher<Path> isSameAs(Path expected) {
-		return createMatcher(expected, BufferedImageMatcher::compareTo);
+		return createMatcher(expected, BufferedImageMatcher::isSameAs);
 	}
 
 	/**
@@ -100,6 +106,54 @@ public class BufferedImageMatcher extends TypeSafeDiagnosingMatcher<BufferedImag
 	 * @return a matcher that compares another image file to the expected image file and writes out the result if they don't match 
 	 */
 	public static Matcher<Path> isSameAs(Path expected, Path result) {
-		return createMatcher(expected, i->compareTo(i, r->ImageComparisonUtil.saveImage(result.toFile(), r)));
+		return createMatcher(expected, i->isSameAs(i, r->ImageComparisonUtil.saveImage(result.toFile(), r)));
 	}
+
+	
+	private static Matcher<byte[]> createMatcher(byte[] expectedImageBytes, Function<BufferedImage, Matcher<BufferedImage>> matchFn) {
+		BufferedImage expectedImage = bufferedImageFromByteArray(expectedImageBytes);
+		return new FeatureMatcher<byte[], BufferedImage>(matchFn.apply(expectedImage), "", "") {
+
+			@Override
+			protected BufferedImage featureValueOf(byte[] actual) {
+				return bufferedImageFromByteArray(actual);
+			}
+
+		};
+	}
+
+	/**
+	 * @param expected the expected image
+	 * @return a matcher that compares another image to the expected image
+	 */
+	public static Matcher<byte[]> isSameAs(byte[] expected) {
+		return createMatcher(expected, BufferedImageMatcher::isSameAs);
+	}
+
+	/**
+	 * @param expected the expected image
+	 * @param resultImageConsumer a Consumer to save the comparison resuit if the match fails
+	 * @return a matcher that compares another image's bytes to the expected image's bytes and calls the Consumer if they don't match 
+	 */
+	public static Matcher<byte[]> isSameAs(byte[] expected, Consumer<byte[]> resultImageConsumer) {
+		return  createMatcher(expected, i->isSameAs(i, r->resultImageConsumer.accept(byteArrayFromBufferedImage(r))));
+	}
+
+	private static BufferedImage bufferedImageFromByteArray(byte[] ba) {
+		try (ByteArrayInputStream is = new ByteArrayInputStream(ba)) {
+			return ImageIO.read(is);
+		} catch (IOException e) {
+			throw new UncheckedIOException("Error while transferring bytes into BufferedImage", e);
+		}
+	}
+	
+	private static byte[] byteArrayFromBufferedImage(BufferedImage bi) {
+		try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
+			ImageIO.write(bi, "png", os);
+			return os.toByteArray();
+		} catch (IOException e) {
+			throw new UncheckedIOException("Error while transferring bytes into BufferedImage", e);
+		}
+	}
+
 }
