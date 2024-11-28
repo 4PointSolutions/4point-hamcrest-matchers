@@ -60,3 +60,4 @@ jobs:
            ${{ inputs.maven-goals }}
       env:
         GITHUB_TOKEN: ${{ github.token }}
+        JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
