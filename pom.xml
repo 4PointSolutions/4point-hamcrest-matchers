@@ -138,18 +138,6 @@
 			<id>release</id>
 			<build>
 				<plugins>
-					<!--
-					<plugin>
-						<groupId>org.sonatype.central</groupId>
-						<artifactId>central-publishing-maven-plugin</artifactId>
-						<version>${central-publishing-maven-plugin.version}</version>
-						<extensions>true</extensions>
-						<configuration>
-							<publishingServerId>central</publishingServerId>
-							<tokenAuth>true</tokenAuth>
-						</configuration>
-					</plugin>
-					-->
 					<plugin>
 						<groupId>org.jreleaser</groupId>
 						<artifactId>jreleaser-maven-plugin</artifactId>
@@ -184,7 +172,7 @@
 										</github>
 										<nexus2>
 											<maven-central>
-												<active>NEVER</active>
+												<active>RELEASE</active>
 												<applyMavenCentralRules>true</applyMavenCentralRules>
 												<url>https://s01.oss.sonatype.org/service/local</url>
 												<stagingRepositories>
