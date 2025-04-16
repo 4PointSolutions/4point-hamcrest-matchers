@@ -50,6 +50,7 @@ jobs:
         git config user.name "GitHub Actions"
 
     - name: Build and Publish to GitHub Packages Apache Maven
+      if: github.ref == 'refs/heads/main' || github.ref == 'refs/tags/*' # Only run on main branch or tags
       run: mvn 
            --batch-mode 
            --no-transfer-progress 
