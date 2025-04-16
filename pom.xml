@@ -35,11 +35,11 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<!-- Plugin Dependencies -->
-		<maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
-		<maven-source-plugin.version>3.2.1</maven-source-plugin.version>
-		<maven-javadoc-plugin.version>3.3.1</maven-javadoc-plugin.version>
+		<maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
+		<maven-source-plugin.version>3.3.1</maven-source-plugin.version>
+		<maven-javadoc-plugin.version>3.11.2</maven-javadoc-plugin.version>
 		<central-publishing-maven-plugin.version>0.4.0</central-publishing-maven-plugin.version>
-		<jreleaser-plugin.version>1.11.0</jreleaser-plugin.version>
+		<jreleaser-plugin.version>1.17.0</jreleaser-plugin.version>
 		
 		<!-- Project Dependencies -->
 		<hamcrest.version>2.2</hamcrest.version>
