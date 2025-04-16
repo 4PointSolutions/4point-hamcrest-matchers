@@ -42,12 +42,12 @@
 		<jreleaser-plugin.version>1.17.0</jreleaser-plugin.version>
 		
 		<!-- Project Dependencies -->
-		<hamcrest.version>2.2</hamcrest.version>
-		<jsoup.version>1.17.2</jsoup.version>
-		<pdfbox.version>3.0.2</pdfbox.version>
-		<junit.version>5.10.2</junit.version>
+		<hamcrest.version>3.0</hamcrest.version>
+		<jsoup.version>1.19.1</jsoup.version>
+		<pdfbox.version>3.0.4</pdfbox.version>
+		<junit.version>5.12.2</junit.version>
 		<jakarta.ws.rs-api.version>3.1.0</jakarta.ws.rs-api.version>
-		<pdfcompare.version>1.2.2</pdfcompare.version>
+		<pdfcompare.version>1.2.3</pdfcompare.version>
 		<image-comparison.version>4.4.0</image-comparison.version>
 
 		<!-- Testing Dependencies -->
